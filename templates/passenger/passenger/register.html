@@ -1,62 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passenger Registration | SwiftRide</title>
+    <title>Passenger Registration</title>
     <style>
-        * { box-sizing: border-box; transition: all 0.2s ease; }
-        body { margin: 0; font-family: Arial, sans-serif; background: #f3f6fb; color: #102a43; }
-        nav { background-color: #0c2340; padding: 15px 30px; display: flex; gap: 20px; width: 100%; }
-        nav a { color: white; text-decoration: none; font-size: 14px; font-weight: 500; }
-        nav a:hover { color: #ffc107; }
-        .reg-box { max-width: 400px; margin: 60px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: #087f8c; text-align: center; margin-top: 0; }
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #f3f6fb; color: #102a43; margin: 0; padding: 40px 20px; }
+        .reg-box { max-width: 450px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { color: #087f8c; text-align: center; margin-top: 0; }
         label { display: block; margin-top: 15px; font-weight: bold; }
         input { width: 100%; padding: 12px; margin-top: 7px; border: 1px solid #ccd6e0; border-radius: 6px; font-size: 14px; }
-        button { width: 100%; margin-top: 22px; padding: 13px; border: none; border-radius: 6px; background: #ffc107; color: #102a43; font-weight: bold; cursor: pointer; font-size: 16px; }
+        button { width: 100%; margin-top: 25px; padding: 13px; border: none; border-radius: 6px; background: #ffc107; color: #102a43; font-weight: bold; cursor: pointer; font-size: 16px; }
         button:hover { background: #ffdb70; }
-        a { color: #087f8c; text-decoration: none; font-weight: bold; }
+        .links-box { margin-top: 20px; text-align: center; display: flex; justify-content: center; gap: 15px; }
+        .links-box a { color: #087f8c; text-decoration: none; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="../../index.html">Home</a>
-    <a href="../about.html">About Us</a>
-    <a href="../contact.html">Contact Us</a>
-    <a href="register.html" style="color: #ffc107; font-weight: bold;">Sign Up</a>
-    <a href="login.html">Passenger Login</a>
-</nav>
-
 <div class="reg-box">
-    <h1>Passenger Registration</h1>
-    <div id="regFormContainer">
-        <label>Full Name</label>
-        <input type="text" id="regName" placeholder="Enter your full name" required>
+    <h2>Passenger Registration</h2>
 
-        <label>Email</label>
-        <input type="email" id="regEmail" placeholder="Enter your email" required>
+    <!-- 💡 ඔයාගේ පරණ Java/Thymeleaf POST කේතය කිසිදු වෙනසක් නොකර ඒ අයුරින්ම රැකගත්තා (Localhost සඳහා) -->
+    <form id="passengerRegisterForm" th:action="@{/passenger/register}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
 
-        <label>Password</label>
-        <input type="password" id="regPassword" placeholder="Create a password" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
 
-        <button type="button" onclick="submitRegister()">Register</button>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" placeholder="Enter phone number" required>
+
+        <label for="favouriteLocation">Favourite Location:</label>
+        <input type="text" id="favouriteLocation" name="favouriteLocation" placeholder="Enter favourite location" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="links-box">
+        <a href="login.html" th:href="@{/passenger/login}">Login</a> |
+        <a href="../../index.html" th:href="@{/}">Home</a>
     </div>
-    <p style="margin-top:20px; text-align: center;">Already have an account? <a href="login.html">Login here</a></p>
-    <p style="text-align: center;"><a href="../../index.html">← Back to Home</a></p>
 </div>
 
+<!-- 💡 පබ්ලික් එකේදී විතරක් 405 වළක්වන, Localhost 8080 එකට බාධා නොකරන සුපිරි Hybrid Script එක -->
 <script>
-    function submitRegister() {
-        const name = document.getElementById('regName').value;
-        const email = document.getElementById('regEmail').value;
-        const pass = document.getElementById('regPassword').value;
-        if(!name || !email || !pass) { alert("Please fill in all fields!"); return; }
+    document.getElementById('passengerRegisterForm').addEventListener('submit', function(e) {
+        // බ්‍රවුසර් එකේ ලිපිනයේ github.io තියෙනවාද කියා පරීක්ෂා කිරීම (පබ්ලික් එකේදී පමණි)
+        if (window.location.hostname.includes('github.io')) {
+            e.preventDefault(); // 👈 GitHub Pages වලදී විතරක් 405 Error එක වළක්වනවා!
 
-        alert("Registration Successful! Welcome to SwiftRide. Please login to continue.");
-        window.location.href = "login.html";
-    }
+            alert("Registration Successful! (GitHub Pages Sandbox Mode Preview)\nWelcome to SwiftRide.");
+
+            window.location.href = "login.html"; // කෙළින්ම පබ්ලික් ලොගින් පිටුවට රැගෙන යයි
+        }
+        // 💡 ඔයා Localhost:8080 එකෙන් රන් කරද්දී මේ 'if' එක ඇතුළට යන්නේ නැහැ!
+        // කෙළින්ම පෝරමය ඔයාගේ සැබෑ Java Controller එකට සාර්ථකව Submit වෙනවා!
+    });
 </script>
+
 </body>
 </html>
